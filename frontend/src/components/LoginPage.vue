@@ -1,245 +1,293 @@
 <template>
-  <div class="container">
-    <div class="box">
-      <!-- Form Section -->
-      <div :class="['form-section', { 'signup-form': !isLogin }]">
-        <h2>{{ isLogin ? 'Login' : 'Sign Up' }}</h2>
-        <p class="subtext">
-          {{ isLogin ? 'Don’t have an account yet?' : 'Already have an account?' }}
-          <a href="#" @click.prevent="toggleForm">{{ isLogin ? 'Sign Up' : 'Login' }}</a>
-        </p>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1 class="login-title">Welcome Back</h1>
+        <p class="login-subtitle">Sign in to your project management account</p>
+      </div>
 
-        <template v-if="!isLogin">
-          <label>Full Name</label>
-          <input type="text" placeholder="John Doe" v-model="fullName" />
-        </template>
+      <form @submit.prevent="handleLogin" class="login-form">
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            v-model="loginForm.email"
+            type="email"
+            class="form-input"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
 
-        <label>Email Address</label>
-        <input type="email" placeholder="you@example.com" v-model="email" />
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            id="password"
+            v-model="loginForm.password"
+            type="password"
+            class="form-input"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
 
-        <label>Password</label>
-        <input type="password" placeholder="Enter password" v-model="password" />
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="loginForm.rememberMe" />
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
 
-        <template v-if="!isLogin">
-          <label>Confirm Password</label>
-          <input type="password" placeholder="Re-enter password" v-model="confirmPassword" />
-        </template>
-
-        <template v-if="isLogin">
-          <div class="options">
-            <label class="remember">
-              <input type="checkbox" v-model="rememberMe" />
-              Remember me
-            </label>
-            <a href="#">Forgot Password?</a>
-          </div>
-        </template>
-
-        <button class="login-btn" @click="isLogin ? handleLogin() : handleSignUp()">
-          {{ isLogin ? 'Login' : 'Create Account' }}
+        <button type="submit" class="login-btn" :disabled="isLoading">
+          <span v-if="isLoading" class="loading-spinner"></span>
+          {{ isLoading ? 'Signing in...' : 'Sign In' }}
         </button>
-      </div>
+      </form>
 
-      <!-- Illustration section -->
-      <div class="image-section">
-        <img src="/assets/login-illustration.png" alt="Illustration" />
+      <div class="login-footer">
+        <p>Don't have an account? <a href="#" @click="switchToRegister">Sign up</a></p>
       </div>
+    </div>
+
+    <div class="login-illustration">
+      <img src="/assets/login-illustration.png" alt="Project Management" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
+<script setup>
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const isLoading = ref(false)
 
-const isLogin = ref(true)
-const fullName = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const rememberMe = ref(false)
+const loginForm = reactive({
+  email: '',
+  password: '',
+  rememberMe: false
+})
 
-function toggleForm() {
-  isLogin.value = !isLogin.value
+const handleLogin = async () => {
+  isLoading.value = true
+  
+  try {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // For demo purposes, accept any credentials
+    if (loginForm.email && loginForm.password) {
+      // Store user session
+      localStorage.setItem('user', JSON.stringify({
+        email: loginForm.email,
+        name: 'John Doe',
+        id: 1
+      }))
+      
+      // Redirect to dashboard
+      router.push('/dashboard')
+    } else {
+      alert('Please enter valid credentials')
+    }
+  } catch (error) {
+    console.error('Login error:', error)
+    alert('Login failed. Please try again.')
+  } finally {
+    isLoading.value = false
+  }
 }
 
-async function handleLogin() {
-  if (!email.value || !password.value) {
-    alert('Please enter email and password.')
-    return
-  }
-
-  try {
-    const res = await fetch('http://localhost:3001/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value
-      })
-    })
-
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.message || 'Login failed')
-
-    localStorage.setItem('token', data.token)
-    router.push('/kanban')
-  } catch (err: any) {
-    alert('Login error: ' + err.message)
-  }
-}
-
-async function handleSignUp() {
-  if (!fullName.value || !email.value || !password.value || !confirmPassword.value) {
-    alert('All fields are required.')
-    return
-  }
-  if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match.')
-    return
-  }
-
-  try {
-    const res = await fetch('http://localhost:3001/api/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: fullName.value,
-        email: email.value,
-        password: password.value
-      })
-    })
-
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.message || 'Signup failed')
-
-    alert('Account created! Please log in.')
-    isLogin.value = true
-  } catch (err: any) {
-    alert('Signup error: ' + err.message)
-  }
+const switchToRegister = () => {
+  // Navigate to register page or show register form
+  alert('Register functionality would be implemented here')
 }
 </script>
 
 <style scoped>
-.container {
+.login-container {
+  display: flex;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #c084fc, #8b5cf6);
-  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.box {
-  background: white;
-  max-width: 1900px;
-  width: 100%;
-  height: 900px;
-  display: flex;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-}
-
-.form-section {
+.login-card {
   flex: 1;
-  padding: 40px;
+  max-width: 500px;
+  background: white;
+  padding: 3rem 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 }
 
-.form-section h2 {
-  margin-bottom: 20px;
-  font-size: 120px;
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-title {
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #4c1d95;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+  margin-bottom: 0.5rem;
 }
 
-.subtext {
-  font-size: 30px;
-  margin-bottom: 25px;
-  color: #555;
+.login-subtitle {
+  color: #6b7280;
+  font-size: 1.1rem;
 }
 
-.subtext a {
-  color: #7c3aed;
-  font-weight: bold;
-  text-decoration: underline;
-  font-size: 16px;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-label {
-  font-size: 25px;
-  font-weight: 500;
-  margin: 12px 0 6px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-input[type="email"],
-input[type="password"],
-input[type="text"] {
-  padding: 12px;
-  font-size: 20px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  margin-bottom: 10px;
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
 }
 
-.options {
+.form-input {
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0 20px;
-  font-size: 14px;
 }
 
-.options a {
-  color: #7c3aed;
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #374151;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.forgot-link {
+  color: #4f46e5;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
 }
 
 .login-btn {
-  background-color: #7c3aed;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
   border: none;
-  padding: 20px;
-  border-radius: 6px;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 25px;
-  margin-bottom: 20px;
-}
-
-.image-section {
-  flex: 1;
-  background: #f8f8ff;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
 }
 
-.image-section img {
-  width: 90%;
-  max-width: 400px;
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
 }
 
-.signup-form {
-  max-width: 600px;
+.login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: #6b7280;
+}
+
+.login-footer a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+.login-illustration {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-illustration img {
+  max-width: 100%;
   height: auto;
-  padding: 60px 50px;
+  max-height: 600px;
 }
 
-.signup-form input {
-  font-size: 18px;
-  padding: 14px;
-}
-
-.signup-form h2 {
-  font-size: 100px;
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .login-card {
+    max-width: 100%;
+    padding: 2rem 1rem;
+  }
+  
+  .login-illustration {
+    display: none;
+  }
+  
+  .login-title {
+    font-size: 2rem;
+  }
 }
 </style>

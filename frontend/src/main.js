@@ -1,7 +1,13 @@
-import { createApp } from 'vue';
-import App from './App.vue';      // App.vue contains <router-view />
-import router from './router';   // your router file
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import router from './router'
+import App from './App.vue'
+import './assets/styles.css'
 
-createApp(App)
-  .use(router)  // make sure to add router to the app
-  .mount('#app');
+const app = createApp(App)
+const pinia = createPinia()
+
+app.use(pinia)
+app.use(router)
+
+app.mount('#app')

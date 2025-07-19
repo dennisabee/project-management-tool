@@ -1,16 +1,26 @@
 <template>
-  <!-- Router outlet -->
-  <router-view />
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <script setup>
-// No script needed here unless global logic
+// Main app component
 </script>
 
 <style>
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f8fafc;
+}
+
+#app {
+  min-height: 100vh;
 }
 </style>

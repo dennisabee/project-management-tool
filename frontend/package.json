@@ -1,23 +1,20 @@
 {
-  "name": "login-ui-app",
+  "name": "project-management-tool",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "start:backend": "node server.js",
-    "start:frontend": "vite",
-    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "vue": "^3.4.0",
+    "@vueuse/core": "^13.5.0",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.17",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.0",
-    "concurrently": "^9.1.2",
-    "vite": "^5.0.0"
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^7.0.5"
   }
 }
