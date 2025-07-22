@@ -238,7 +238,7 @@ const projects = ref([
     totalTasks: 24,
     updatedAt: '2025-07-18',
     team: [
-      { id: 1, name: 'John Doe' },
+      { id: 1, name: 'Joe Goldberg' },
       { id: 2, name: 'Jane Smith' },
       { id: 3, name: 'Mike Johnson' }
     ]

@@ -213,7 +213,6 @@ const recentTasks = ref([
   { id: 3, title: 'Review marketing materials', projectName: 'Marketing Campaign', priority: 'low' }
 ])
 
-// User data (using "User" instead of John Doe)
 const user = ref({ name: 'User' })
 
 onMounted(() => {

@@ -82,7 +82,7 @@ const handleLogin = async () => {
       // Store user session
       localStorage.setItem('user', JSON.stringify({
         email: loginForm.email,
-        name: 'John Doe',
+        name: 'Jonathan Joestar',
         id: 1
       }))
       

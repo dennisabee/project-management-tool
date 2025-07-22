@@ -177,7 +177,7 @@ const loadTasks = () => {
       id: 1,
       title: 'Design System Setup',
       description: 'Create a comprehensive design system',
-      assignee: 'John Doe',
+      assignee: 'Jonathan Moore',
       priority: 'high',
       columnId: 1,
       tags: ['design', 'frontend'],

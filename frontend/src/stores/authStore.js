@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', {
         if (credentials.email === 'demo@example.com' && credentials.password === 'demo123') {
           this.user = {
             id: 1,
-            name: 'John Doe',
+            name: 'Joseph',
             email: 'demo@example.com',
             role: 'Project Manager',
             avatar: ''
@@ -111,7 +111,7 @@ export const useAuthStore = defineStore('auth', {
       // For demo, simulate logged in state
       this.user = {
         id: 1,
-        name: 'John Doe',
+        name: 'Will Bettleheim',
         email: 'demo@example.com',
         role: 'Project Manager'
       }
